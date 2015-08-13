@@ -28,10 +28,15 @@ class GalleriesController < ApplicationController
 
     respond_to do |format|
       if @gallery.save
+        if params[:images]
+          params[:images].each do |image|
+            @gallery.pictures.create(image: image)
+          end
+        end
         format.html { redirect_to @gallery, notice: 'Gallery was successfully created.' }
-        format.json { render :show, status: :created, location: @gallery }
+        format.json { render json: @gallery, status: :created, location: @gallery }
       else
-        format.html { render :new }
+        format.html { render action: "new" }
         format.json { render json: @gallery.errors, status: :unprocessable_entity }
       end
     end
